@@ -4,6 +4,10 @@ import { render, waitFor } from "@testing-library/react";
 import FetchJournals from "../components/FetchJournals";
 
 describe("FetchJournals", () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+
   it("should render without errors", async () => {
     render(<FetchJournals />);
   });
@@ -29,9 +33,9 @@ describe("FetchJournals", () => {
 
     // Wait for the data to be displayed in the component
     await waitFor(() => {
-      expect(getByText("Journal 1")).toBeInTheDocument();
-      expect(getByText("Journal 2")).toBeInTheDocument();
-      expect(getByText("Journal 3")).toBeInTheDocument();
+      mockApiResponse.results.forEach((journal) => {
+        expect(getByText(journal.title)).toBeInTheDocument();
+      });
     });
   });
 
@@ -45,5 +49,9 @@ describe("FetchJournals", () => {
     await waitFor(() => {
       expect(getByText("Network response was not ok")).toBeInTheDocument();
     });
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 });

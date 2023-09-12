@@ -2,13 +2,17 @@ import { useState, useEffect } from "react";
 
 // API reponse results to ensure proper data saving
 interface ApiResponse {
-  results: { title: string }[];
+  results: {
+    title: string;
+    yearPublished: number;
+    authors: { name: string }[];
+  }[];
 }
 
 // Fetch journals function to fetch journals from api call
 const FetchJournals = () => {
   // setting useStates to hold data and error handling text
-  const [data, setData] = useState<{ title: string }[]>([]);
+  const [data, setData] = useState<ApiResponse["results"]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const apiUrl = "https://api.core.ac.uk/v3/search";
@@ -39,6 +43,7 @@ const FetchJournals = () => {
     };
     // Call fetch data at the very end
     fetchData();
+    console.log("data", data);
   }, []);
 
   return (
@@ -51,7 +56,18 @@ const FetchJournals = () => {
         // Display fetched data if there is no error
         <ul>
           {data.map((result, index) => (
-            <li key={index}>{result.title}</li>
+            <li key={index}>
+              <p>Title: {result.title}</p>
+              <p>Year Published: {result.yearPublished}</p>
+              {/* Map through authors and display their names */}
+              <ul>
+                Authors:
+                {result.authors &&
+                  result.authors.map((author, authorIndex) => (
+                    <li key={authorIndex}>{author.name}</li>
+                  ))}
+              </ul>
+            </li>
           ))}
         </ul>
       )}
