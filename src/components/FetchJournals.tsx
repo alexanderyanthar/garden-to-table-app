@@ -9,8 +9,12 @@ interface ApiResponse {
   }[];
 }
 
+interface FetchJournalsProps {
+  searchQuery?: string;
+}
+
 // Fetch journals function to fetch journals from api call
-const FetchJournals = () => {
+const FetchJournals = ({ searchQuery = "" }) => {
   // setting useStates to hold data and error handling text
   const [data, setData] = useState<ApiResponse["results"]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +30,7 @@ const FetchJournals = () => {
       // Try to call api
       try {
         const response = await fetch(
-          `${apiUrl}/works?apiKey=${apiKey}&page=1&pageSize=10`
+          `${apiUrl}/works?apiKey=${apiKey}&page=1&pageSize=10&q=${searchQuery}`
         );
         // If response not okay, throw error message which will be sent to catch
         // If repsonse okay, set responseData to the ApiResponse interface and away for the response.json()
@@ -44,7 +48,7 @@ const FetchJournals = () => {
     // Call fetch data at the very end
     fetchData();
     console.log("data", data);
-  }, []);
+  }, [searchQuery]);
 
   return (
     <div>
@@ -52,24 +56,30 @@ const FetchJournals = () => {
       {error ? (
         // Display error message if there is an error
         <div>{error}</div>
+      ) : // Conditionally render content based on searchQuery
+      searchQuery ? (
+        data.length > 0 ? (
+          <ul>
+            {data.map((result, index) => (
+              <li key={index}>
+                <p>Title: {result.title}</p>
+                <p>Year Published: {result.yearPublished}</p>
+                {/* Map through authors and display their names */}
+                <ul>
+                  Authors:
+                  {result.authors &&
+                    result.authors.map((author, authorIndex) => (
+                      <li key={authorIndex}>{author.name}</li>
+                    ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Loading...</p>
+        )
       ) : (
-        // Display fetched data if there is no error
-        <ul>
-          {data.map((result, index) => (
-            <li key={index}>
-              <p>Title: {result.title}</p>
-              <p>Year Published: {result.yearPublished}</p>
-              {/* Map through authors and display their names */}
-              <ul>
-                Authors:
-                {result.authors &&
-                  result.authors.map((author, authorIndex) => (
-                    <li key={authorIndex}>{author.name}</li>
-                  ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
+        <p>Please enter a search query.</p>
       )}
     </div>
   );
