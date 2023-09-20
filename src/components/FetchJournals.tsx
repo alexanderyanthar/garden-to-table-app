@@ -21,7 +21,7 @@ const FetchJournals = ({ searchQuery = "" }) => {
 
   const apiUrl = "https://api.core.ac.uk/v3/search";
   //   Filler api key to hide in git repo
-  const apiKey = process.env.REACT_APP_API_KEY;
+  const apiKey = process.env.REACT_APP_CORE_API_KEY;
 
   //   calling the api along with query parameters - will update in the coming days
   useEffect(() => {

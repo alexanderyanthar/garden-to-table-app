@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import FetchJournals from "./components/FetchJournals";
 import Search from "./components/Search";
+import FetchNutrition from "./components/FetchNutrition";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -17,6 +18,7 @@ function App() {
     <div className="App">
       <Search onSubmit={handleSearchSubmit} />
       <FetchJournals searchQuery={searchQuery} />
+      <FetchNutrition />
     </div>
   );
 }

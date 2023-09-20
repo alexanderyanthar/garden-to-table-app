@@ -1,5 +1,5 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, getByLabelText } from "@testing-library/react";
 import Search from "../components/Search";
 
 // Search test functions
@@ -33,22 +33,25 @@ describe("Search", () => {
   });
 
   // test to see if the submit function works when pressed
-  it("should call the submit function with the search query when the form is submitted", () => {
+  it("should call the submit function with the search query and selected API when the form is submitted", () => {
     // define the handleSubmit function
     const handleSubmit = jest.fn();
-    const { getByPlaceholderText, getByText } = render(
+    const { getByPlaceholderText, getByText, getByLabelText } = render(
       <Search onSubmit={handleSubmit} />
     );
 
     const searchInput = getByPlaceholderText("Search...");
     const searchButton = getByText("Search");
+    const apiDropdown = getByLabelText("Select API");
+
+    fireEvent.change(apiDropdown, { target: { value: "journals" } });
 
     // fire the click event
     fireEvent.change(searchInput, { target: { value: "JavaScript" } });
     fireEvent.click(searchButton);
 
     // The input value used is JavaScript and it should return that value when searchButton is clicked
-    expect(handleSubmit).toHaveBeenCalledWith("JavaScript");
+    expect(handleSubmit).toHaveBeenCalledWith("JavaScript", "journals");
   });
 
   // test to check if an error message display when  a user submits the form with an empty string

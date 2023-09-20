@@ -56,7 +56,7 @@ describe("FetchJournals", () => {
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
         `https://api.core.ac.uk/v3/search/works?apiKey=${
-          process.env.REACT_APP_API_KEY
+          process.env.REACT_APP_CORE_API_KEY
         }&page=1&pageSize=10&q=${encodeURIComponent(searchQuery)}`
       );
     });
