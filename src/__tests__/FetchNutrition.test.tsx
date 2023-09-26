@@ -19,7 +19,7 @@ describe("FetchNutrition Component", () => {
       json: () => Promise.resolve(mockApiResponse),
     });
 
-    render(<FetchNutrition />);
+    render(<FetchNutrition searchQuery="milk" selectedApi="nutrition" />);
 
     // Expect the function to be called with the USDA API and the query and dataType parameters
     await waitFor(() => {
@@ -43,7 +43,9 @@ describe("FetchNutrition Component", () => {
       json: () => Promise.resolve(mockApiResponse),
     });
 
-    const { getByText } = render(<FetchNutrition />);
+    const { getByText } = render(
+      <FetchNutrition searchQuery="milk" selectedApi="nutrition" />
+    );
 
     // Wait for component to render the data
     await waitFor(() => {

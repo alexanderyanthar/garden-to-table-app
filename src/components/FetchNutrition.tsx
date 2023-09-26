@@ -8,33 +8,43 @@ interface NutritionApiResponse {
   foods: FoodData[];
 }
 
-const FetchNutrition: React.FC = () => {
+interface FetchNutritionProps {
+  searchQuery: string;
+  selectedApi: string;
+}
+
+const FetchNutrition: React.FC<FetchNutritionProps> = ({
+  searchQuery,
+  selectedApi,
+}) => {
   const [data, setData] = useState<NutritionApiResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const apiUrl = `https://api.nal.usda.gov/fdc/v1/foods/search`;
-    const apiKey = process.env.REACT_APP_USDA_API_KEY;
+    if (searchQuery && selectedApi) {
+      const apiUrl = `https://api.nal.usda.gov/fdc/v1/foods/search`;
+      const apiKey = process.env.REACT_APP_USDA_API_KEY;
 
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `${apiUrl}?api_key=${apiKey}&query=milk&dataType=Survey%20%28FNDDS%29`
-        );
+      const fetchData = async () => {
+        try {
+          const response = await fetch(
+            `${apiUrl}?api_key=${apiKey}&query=${searchQuery}&dataType=Survey%20%28FNDDS%29`
+          );
 
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+
+          const responseData: NutritionApiResponse = await response.json();
+          setData(responseData);
+        } catch (error) {
+          console.error("Network response was not ok", error);
+          setError("Network response was not ok");
         }
-
-        const responseData: NutritionApiResponse = await response.json();
-        setData(responseData);
-      } catch (error) {
-        console.error("Network response was not ok", error);
-        setError("Network response was not ok");
-      }
-    };
-    fetchData();
-  }, []);
+      };
+      fetchData();
+    }
+  }, [searchQuery, selectedApi]);
 
   useEffect(() => {
     console.log("This is a response", data);
