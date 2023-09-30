@@ -2,6 +2,12 @@ import { useState, useEffect } from "react";
 
 interface FoodData {
   description: string;
+  foodNutrients: Array<{
+    nutrientid: number;
+    nutrientName: string;
+    unitName: string;
+    value: number;
+  }>;
 }
 
 interface NutritionApiResponse {
@@ -60,6 +66,17 @@ const FetchNutrition: React.FC<FetchNutritionProps> = ({
             <div>
               <h3>{food.description}</h3>
               {/* Display other properties as needed */}
+              <h3>Nutirion per 100g</h3>
+              <ul>
+                {food.foodNutrients.map((nutrient) => (
+                  <li key={nutrient.nutrientid}>
+                    <p>{nutrient.nutrientName}</p>
+                    <p>
+                      {nutrient.value} {nutrient.unitName}
+                    </p>
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>

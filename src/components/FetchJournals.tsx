@@ -6,6 +6,8 @@ interface ApiResponse {
     title: string;
     yearPublished: number;
     authors: { name: string }[];
+    abstract: string;
+    downloadUrl: string;
   }[];
 }
 
@@ -30,7 +32,7 @@ const FetchJournals = ({ searchQuery = "" }) => {
       // Try to call api
       try {
         const response = await fetch(
-          `${apiUrl}/works?apiKey=${apiKey}&page=1&pageSize=10&q=${searchQuery}`
+          `${apiUrl}/works?apiKey=${apiKey}&page=1&pageSize=10&q=title:${searchQuery}`
         );
         // If response not okay, throw error message which will be sent to catch
         // If repsonse okay, set responseData to the ApiResponse interface and away for the response.json()
@@ -72,6 +74,10 @@ const FetchJournals = ({ searchQuery = "" }) => {
                       <li key={authorIndex}>{author.name}</li>
                     ))}
                 </ul>
+                <p>Text: {result.abstract}</p>
+                <a href={result.downloadUrl} target="_blank">
+                  Read the journal here
+                </a>
               </li>
             ))}
           </ul>
